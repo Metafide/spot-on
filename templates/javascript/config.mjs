@@ -66,7 +66,7 @@ const METAFIDE_ENDPOINT = `${METAFIDE_API_URL}/${METAFIDE_API_VERSION}/${METAFID
  *
  * @example METAFIDE_API_KEY = "metafide_0cdba......."
  */
-const METAFIDE_API_KEY = "";
+const METAFIDE_API_KEY = "metafide_b2c77a342851a04978e4459ea014fcbe";
 
 
 // -----------------------------------------------------------------------------
@@ -98,7 +98,7 @@ const NETWORK = "testnet";
  *
  * @example METAFIDE_USER_ADDRESS = "0xAbC123..."
  */
-const METAFIDE_USER_ADDRESS = ""
+const METAFIDE_USER_ADDRESS = "0x50294f689a5C9b8466222448453dD0BDA934d7dA"
 
 /**
  * The duration of each game round the bot participates in, in seconds.

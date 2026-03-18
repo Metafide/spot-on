@@ -41,7 +41,7 @@ METAFIDE_ENDPOINT = f"{METAFIDE_API_URL}/{METAFIDE_API_VERSION}/{METAFIDE_BASE_P
 
 # Your personal Metafide API key.
 # Keep this value private and never commit it publicly.
-METAFIDE_API_KEY = ""
+METAFIDE_API_KEY = "metafide_b2c77a342851a04978e4459ea014fcbe"
 
 # -----------------------------------------------------------------------------
 # NETWORK
@@ -60,7 +60,7 @@ NETWORK = "testnet"
 
 # Your personal Metafide wallet address.
 # This is attached to every position the bot places.
-METAFIDE_USER_ADDRESS = ""
+METAFIDE_USER_ADDRESS = "0x50294f689a5C9b8466222448453dD0BDA934d7dA"
 
 # The duration of each game round in seconds.
 INTERVAL = 60
