@@ -6,9 +6,6 @@ This project includes implementations in:
 
 - JavaScript
 - Python
-- Go
-- Ruby
-- C++
 
 Each version follows the same core behavior and the same CLI pattern, so it is easy to switch between languages while keeping the bot logic consistent.
 
