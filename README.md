@@ -515,9 +515,9 @@ npm install -g metafide-spoton-mcp
 
 **2. Get your API credentials**
 
-You need two values from [Metafide](https://metafide.io):
+You need two values from [Metafide](https://beta.surge.metafide.io):
 - **API key** - found in your account settings
-- **Wallet address** - the address you use to place positions
+- **Wallet address** - the Metafide wallet address you use to place positions
 
 **3. Add to your AI tool**
 
