@@ -24,7 +24,7 @@ Metafide REST API (api.metafide.io)
 Two required environment variables:
 
 - `METAFIDE_API_KEY` — API key from Metafide dashboard
-- `METAFIDE_WALLET_ADDRESS` — user's wallet address
+- `METAFIDE_USER_ADDRESS` — user's wallet address (matches template convention)
 
 These are set once in the MCP server config (e.g., Claude Desktop `claude_desktop_config.json`) and never exposed in tool calls. All API requests include the `x-api-key` header.
 
@@ -72,9 +72,13 @@ These are set once in the MCP server config (e.g., Claude Desktop `claude_deskto
 - **Behavior:**
   1. Fetch current game state via `GET /spot`
   2. Validate game is accepting positions
-  3. Validate amount meets minimum for current interval
+  3. Validate amount meets minimum for current interval (60s: 0.1, 3600s: 1, 23400s: 5, 86400s: 5)
   4. If network is mainnet and `confirmed` is not `true`: return confirmation object with details, do not submit
-  5. If testnet or confirmed: `POST /spot` with payload
+  5. If testnet or confirmed: `POST /spot` with payload:
+     ```
+     { gid: <from GET /spot>, c: currency, a: asset, sp: strike_price (string),
+       f: amount (string), pw: METAFIDE_USER_ADDRESS, n: network, it: interval }
+     ```
 - **Returns:** `{ txid }` on success, or `{ confirmation_required: true, details: { strike_price, amount, network, game_id } }` on mainnet without confirmation
 
 #### run_bot_cycle
@@ -91,7 +95,7 @@ These are set once in the MCP server config (e.g., Claude Desktop `claude_deskto
   6. Generate randomized positions (remaining slots)
   7. If mainnet and not confirmed: return confirmation with generated positions preview
   8. Submit positions
-  9. Retry failed submissions (max 3 retries, 1s delay)
+  9. Retry only the failed subset of submissions (max 3 retries, 1s delay between attempts)
 - **Returns:** `{ positions_submitted, positions_failed, total_positions, details: [...] }`
 
 #### configure_strategy
@@ -152,7 +156,7 @@ position_amounts: {
 ### MCP server behavior
 
 - No client-side throttle — limits are generous for interactive MCP usage
-- On 429 response: parse `resetIn` from response body, wait that duration, retry once
+- On 429 response: parse `resetIn` from response body (default 5s if absent), wait that duration, retry once
 - If still 429 after retry: return error to Claude with limit details
 - `run_bot_cycle` should be spaced at least 5 seconds apart (matching template behavior); server logs a warning if called more frequently
 
@@ -207,7 +211,7 @@ Add to `claude_desktop_config.json`:
       "args": ["metafide-spoton-mcp"],
       "env": {
         "METAFIDE_API_KEY": "your-key-here",
-        "METAFIDE_WALLET_ADDRESS": "your-wallet-here"
+        "METAFIDE_USER_ADDRESS": "your-wallet-here"
       }
     }
   }
@@ -217,10 +221,11 @@ Add to `claude_desktop_config.json`:
 ### Claude Code
 
 ```bash
-claude mcp add metafide -- npx metafide-spoton-mcp
+claude mcp add metafide \
+  --env METAFIDE_API_KEY=your-key-here \
+  --env METAFIDE_USER_ADDRESS=your-wallet-here \
+  -- npx metafide-spoton-mcp
 ```
-
-Set env vars in shell before launching.
 
 ## Example User Interactions
 
