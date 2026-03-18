@@ -500,7 +500,7 @@ Use the actual command syntax for the language you selected.
 
 The MCP server lets AI assistants like Claude interact with the Metafide Spot-On API directly. Instead of editing config files and running CLI commands, you can use natural language to check balances, place positions, and run the bot.
 
-This works with any AI tool that supports the [Model Context Protocol](https://modelcontextprotocol.io), including Claude Desktop, Claude Code, Cursor, and Windsurf.
+This works with any AI tool that supports the [Model Context Protocol](https://modelcontextprotocol.io), including Claude Desktop, Claude Code, ChatGPT Desktop, Gemini CLI, Cursor, and Windsurf.
 
 ### Quick setup
 
@@ -542,7 +542,61 @@ Add this to your AI tool's MCP configuration file:
 claude mcp add metafide-spoton -- env METAFIDE_API_KEY=your_api_key_here METAFIDE_USER_ADDRESS=your_wallet_address_here metafide-spoton-mcp
 ```
 
+**ChatGPT Desktop** (`~/.config/openai/mcp.json` on Mac):
+
+```json
+{
+  "mcpServers": {
+    "metafide-spoton": {
+      "command": "metafide-spoton-mcp",
+      "env": {
+        "METAFIDE_API_KEY": "your_api_key_here",
+        "METAFIDE_USER_ADDRESS": "your_wallet_address_here"
+      }
+    }
+  }
+}
+```
+
+**Gemini CLI** (run in terminal):
+
+```bash
+gemini mcp add metafide-spoton -- env METAFIDE_API_KEY=your_api_key_here METAFIDE_USER_ADDRESS=your_wallet_address_here metafide-spoton-mcp
+```
+
+Or add manually to `~/.gemini/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "metafide-spoton": {
+      "command": "metafide-spoton-mcp",
+      "env": {
+        "METAFIDE_API_KEY": "your_api_key_here",
+        "METAFIDE_USER_ADDRESS": "your_wallet_address_here"
+      }
+    }
+  }
+}
+```
+
 **Cursor** (`.cursor/mcp.json` in your project):
+
+```json
+{
+  "mcpServers": {
+    "metafide-spoton": {
+      "command": "metafide-spoton-mcp",
+      "env": {
+        "METAFIDE_API_KEY": "your_api_key_here",
+        "METAFIDE_USER_ADDRESS": "your_wallet_address_here"
+      }
+    }
+  }
+}
+```
+
+**Windsurf** (`.windsurf/mcp.json` in your project):
 
 ```json
 {
