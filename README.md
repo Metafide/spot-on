@@ -496,6 +496,127 @@ Use the actual command syntax for the language you selected.
 
 ---
 
+## MCP Server (AI Agent Integration)
+
+The MCP server lets AI assistants like Claude interact with the Metafide Spot-On API directly. Instead of editing config files and running CLI commands, you can use natural language to check balances, place positions, and run the bot.
+
+This works with any AI tool that supports the [Model Context Protocol](https://modelcontextprotocol.io), including Claude Desktop, Claude Code, Cursor, and Windsurf.
+
+### Quick setup
+
+**1. Install the package**
+
+```bash
+npm install -g metafide-spoton-mcp
+```
+
+**2. Get your API credentials**
+
+You need two values from [Metafide](https://beta.surge.metafide.io):
+- **API key** - found in your account settings
+- **Wallet address** - the Metafide wallet address you use to place positions
+
+**3. Add to your AI tool**
+
+Add this to your AI tool's MCP configuration file:
+
+**Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json` on Mac, `%APPDATA%\Claude\claude_desktop_config.json` on Windows):
+
+```json
+{
+  "mcpServers": {
+    "metafide-spoton": {
+      "command": "metafide-spoton-mcp",
+      "env": {
+        "METAFIDE_API_KEY": "your_api_key_here",
+        "METAFIDE_USER_ADDRESS": "your_wallet_address_here"
+      }
+    }
+  }
+}
+```
+
+**Claude Code** (run in terminal):
+
+```bash
+claude mcp add metafide-spoton -- env METAFIDE_API_KEY=your_api_key_here METAFIDE_USER_ADDRESS=your_wallet_address_here metafide-spoton-mcp
+```
+
+**Cursor** (`.cursor/mcp.json` in your project):
+
+```json
+{
+  "mcpServers": {
+    "metafide-spoton": {
+      "command": "metafide-spoton-mcp",
+      "env": {
+        "METAFIDE_API_KEY": "your_api_key_here",
+        "METAFIDE_USER_ADDRESS": "your_wallet_address_here"
+      }
+    }
+  }
+}
+```
+
+**4. Restart your AI tool and start chatting**
+
+Once configured, you can ask things like:
+- "What's my current balance?"
+- "What's the live BTC price?"
+- "Place a position at $72,000 for 1 USDC"
+- "Run a bot cycle"
+- "Switch to the 1-hour interval"
+
+### Available tools
+
+| Tool | What it does |
+|------|-------------|
+| `get_balance` | Check your current USDC balance |
+| `get_live_price` | Get the current BTC live price |
+| `get_game_status` | See active positions, projected winnings, and streak data |
+| `get_spot_game` | Check if a game is active and accepting positions |
+| `place_position` | Place a single prediction position |
+| `run_bot_cycle` | Run one full automated cycle (check game, generate positions, submit) |
+| `configure_strategy` | Adjust bot settings: network, interval, max positions, price ranges |
+| `get_config` | View current bot configuration |
+
+### Strategy configuration
+
+The bot starts with sensible defaults (testnet, 60-second interval, BTC_USDT). You can adjust the strategy through conversation:
+
+- "Switch to mainnet" - changes the network
+- "Set the interval to 1 hour" - changes to 3600-second games
+- "Set max positions to 5" - limits positions per round
+- "Set the price range to -20 to +30" - adjusts randomized price offsets
+- "Set position amounts to 1, 2, 3 USDC" - sets the amounts to randomly pick from
+
+These settings persist for the duration of your session.
+
+### Mainnet safety
+
+When operating on mainnet, the server requires explicit confirmation before placing positions. This prevents accidental real-money trades. The AI will show you the position details and ask you to confirm before submitting.
+
+### For developers
+
+If you want to run the MCP server from source:
+
+```bash
+cd mcp-server
+npm install
+npm run build
+node dist/index.js
+```
+
+Run tests:
+
+```bash
+npm test
+```
+
+The server uses `stdio` transport and communicates via JSON-RPC over stdin/stdout.
+
+---
+
 ## Goal of this project
 
 The goal of this project is to provide the same Metafide Spot bot experience across multiple languages, while keeping:
