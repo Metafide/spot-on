@@ -96,48 +96,6 @@ python index.py status
 python index.py logs
 ```
 
-### Go
-
-Using `go run`:
-
-```bash
-go run . run
-go run . start
-go run . stop
-go run . status
-go run . logs
-```
-
-Using a built binary:
-
-```bash
-./metafide-bot run
-./metafide-bot start
-./metafide-bot stop
-./metafide-bot status
-./metafide-bot logs
-```
-
-### Ruby
-
-```bash
-ruby index.rb run
-ruby index.rb start
-ruby index.rb stop
-ruby index.rb status
-ruby index.rb logs
-```
-
-### C++
-
-```bash
-./metafide-bot run
-./metafide-bot start
-./metafide-bot stop
-./metafide-bot status
-./metafide-bot logs
-```
-
 ---
 
 ## Common bot behavior
