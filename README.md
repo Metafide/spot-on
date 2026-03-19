@@ -208,46 +208,6 @@ python/
 ├── spot.py
 └── requirements.txt
 ```
-
-### Go
-
-```
-go/
-├── config.go
-├── main.go
-├── request.go
-├── runner.go
-├── spot.go
-└── go.mod
-```
-
-### Ruby
-
-```
-ruby/
-├── config.rb
-├── index.rb
-├── request.rb
-├── runner.rb
-├── spot.rb
-└── Gemfile
-```
-
-### C++
-
-```
-cpp/
-├── config.hpp
-├── main.cpp
-├── request.cpp
-├── request.hpp
-├── runner.cpp
-├── runner.hpp
-├── spot.cpp
-├── spot.hpp
-└── CMakeLists.txt
-```
-
 ---
 
 ## File overview
@@ -303,43 +263,6 @@ node dist/index.js run
 pip install -r requirements.txt
 python index.py run
 ```
-
-### Go
-
-**Requirements:** Go 1.22+
-
-```bash
-go run . run
-```
-
-Or build first:
-
-```bash
-go build -o metafide-bot
-./metafide-bot run
-```
-
-### Ruby
-
-**Requirements:** Ruby 3+
-
-```bash
-bundle install
-ruby index.rb run
-```
-
-### C++
-
-**Requirements:** C++17 compiler, libcurl, nlohmann/json, CMake
-
-```bash
-mkdir build
-cd build
-cmake ..
-make
-./metafide-bot run
-```
-
 ---
 
 ## Logs
@@ -380,7 +303,7 @@ Check your config file and ensure:
 - API key is set
 - User address is set
 - Network is `testnet` or `mainnet`
-- Interval is one of `60`, `3600`, `23400`, `86400`
+- Interval is one of `60`, `3600`, `86400`
 
 ### Bot starts but places nothing
 
