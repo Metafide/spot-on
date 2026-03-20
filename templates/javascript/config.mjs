@@ -17,7 +17,6 @@
  * =============================================================================
  */
 
-
 // -----------------------------------------------------------------------------
 // API CONNECTION SETTINGS
 // These constants define where the bot sends its requests.
@@ -28,7 +27,8 @@
  * The base URL of the Metafide REST API.
  * All HTTP requests made by the bot are sent to this server.
  */
-const METAFIDE_API_URL = "https://staging-rest-service-714806972467.us-east1.run.app";
+const METAFIDE_API_URL =
+  "https://staging-rest-service-714806972467.us-east1.run.app";
 
 /**
  * The API version to use. Included in every request URL.
@@ -51,7 +51,6 @@ const METAFIDE_BASE_PATH = "surge/games/";
  */
 const METAFIDE_ENDPOINT = `${METAFIDE_API_URL}/${METAFIDE_API_VERSION}/${METAFIDE_BASE_PATH}`;
 
-
 // -----------------------------------------------------------------------------
 // AUTHENTICATION
 // -----------------------------------------------------------------------------
@@ -68,7 +67,6 @@ const METAFIDE_ENDPOINT = `${METAFIDE_API_URL}/${METAFIDE_API_VERSION}/${METAFID
  */
 const METAFIDE_API_KEY = "metafide_b2c77a342851a04978e4459ea014fcbe";
 
-
 // -----------------------------------------------------------------------------
 // NETWORK
 // -----------------------------------------------------------------------------
@@ -84,7 +82,6 @@ const METAFIDE_API_KEY = "metafide_b2c77a342851a04978e4459ea014fcbe";
  */
 const NETWORK = "testnet";
 
-
 // -----------------------------------------------------------------------------
 // GAME SETTINGS
 // -----------------------------------------------------------------------------
@@ -98,7 +95,7 @@ const NETWORK = "testnet";
  *
  * @example METAFIDE_USER_ADDRESS = "0xAbC123..."
  */
-const METAFIDE_USER_ADDRESS = "0x50294f689a5C9b8466222448453dD0BDA934d7dA"
+const METAFIDE_USER_ADDRESS = "0x50294f689a5C9b8466222448453dD0BDA934d7dA";
 
 /**
  * The duration of each game round the bot participates in, in seconds.
@@ -134,7 +131,6 @@ const CURRENCY = "USDC";
  */
 const ASSET = "BTC_USDT";
 
-
 // -----------------------------------------------------------------------------
 // PRICE RANGE SETTINGS
 // Defines how much the bot offsets the strike price from the current live price
@@ -152,12 +148,11 @@ const ASSET = "BTC_USDT";
  * @property {number} max - Maximum positive offset from live price
  */
 const PRICE_RANGES = {
-  60:    { min: -10, max: 10 },
-  3600:  { min: -40, max: 50 },
+  60: { min: -10, max: 10 },
+  3600: { min: -40, max: 50 },
   23400: { min: -40, max: 50 },
   86400: { min: -40, max: 50 },
 };
-
 
 // -----------------------------------------------------------------------------
 // POSITION SETTINGS
@@ -181,7 +176,7 @@ const MAX_ALLOWED_POSITIONS = 10;
  *
  * @default false
  */
-const ENABLE_EARLY_PRECISION = false
+const ENABLE_EARLY_PRECISION = false;
 
 /**
  * Defines the spread of position sizes the bot can choose from,
@@ -195,16 +190,13 @@ const ENABLE_EARLY_PRECISION = false
  * Intervals:
  *   60    →  1-minute rounds  — smaller positions (0.2 – 0.5 USDC)
  *   3600  →  1-hour rounds    — medium positions  (1 – 4 USDC)
- *   23400 →  6.5-hour rounds  — larger positions  (5 – 8 USDC)
  *   86400 →  1-day rounds     — larger positions  (5 – 8 USDC)
  */
 const POSITIONS_RANGE = {
-  60:    [0.2, 0.3, 0.4, 0.5],
-  3600:  [1, 2, 3, 4],
-  23400: [5, 6, 7, 8],
+  60: [0.01, 0.02, 0.03, 0.04],
+  3600: [1, 2, 3, 4],
   86400: [5, 6, 7, 8],
 };
-
 
 // -----------------------------------------------------------------------------
 // EXPORTS

@@ -98,7 +98,7 @@ ENABLE_EARLY_PRECISION = False
 
 # Allowed position sizes per interval.
 POSITIONS_RANGE = {
-    60: [0.2, 0.3, 0.4, 0.5],
+    60: [0.01, 0.02, 0.03, 0.04],
     3600: [1, 2, 3, 4],
     23400: [5, 6, 7, 8],
     86400: [5, 6, 7, 8],
