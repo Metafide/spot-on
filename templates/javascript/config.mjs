@@ -150,7 +150,6 @@ const ASSET = "BTC_USDT";
 const PRICE_RANGES = {
   60: { min: -10, max: 10 },
   3600: { min: -40, max: 50 },
-  23400: { min: -40, max: 50 },
   86400: { min: -40, max: 50 },
 };
 

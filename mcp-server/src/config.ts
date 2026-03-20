@@ -1,10 +1,11 @@
-const METAFIDE_API_URL = "https://staging-rest-service-714806972467.us-east1.run.app";
+const METAFIDE_API_URL =
+  "https://staging-rest-service-714806972467.us-east1.run.app";
 const METAFIDE_API_VERSION = "v1";
 const METAFIDE_BASE_PATH = "surge/games/";
 
 export interface StrategyConfig {
   network: "testnet" | "mainnet";
-  interval: 60 | 3600 | 23400 | 86400;
+  interval: 60 | 3600 | 86400;
   currency: string;
   asset: string;
   max_positions: number;
@@ -27,15 +28,13 @@ const DEFAULTS: StrategyConfig = {
   max_positions: 10,
   enable_early_precision: false,
   price_ranges: {
-    60:    { min: -10, max: 10 },
-    3600:  { min: -40, max: 50 },
-    23400: { min: -40, max: 50 },
+    60: { min: -10, max: 10 },
+    3600: { min: -40, max: 50 },
     86400: { min: -40, max: 50 },
   },
   position_amounts: {
-    60:    [0.2, 0.3, 0.4, 0.5],
-    3600:  [1, 2, 3, 4],
-    23400: [5, 6, 7, 8],
+    60: [0.01, 0.02, 0.03, 0.04],
+    3600: [1, 2, 3, 4],
     86400: [5, 6, 7, 8],
   },
 };

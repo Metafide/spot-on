@@ -144,7 +144,7 @@ Each language version includes a config file that defines the bot settings.
 | `METAFIDE_API_KEY`      | Your Metafide API key                                    |
 | `METAFIDE_USER_ADDRESS` | Your wallet address used for placing positions           |
 | `NETWORK`               | `testnet` or `mainnet`                                   |
-| `INTERVAL`              | `60`, `3600`, `23400`, or `86400`                        |
+| `INTERVAL`              | `60`, `3600` or `86400`                        |
 | `CURRENCY`              | Expected value: `USDC`                                   |
 | `ASSET`                 | Default supported asset: `BTC_USDT`                      |
 | `MAX_ALLOWED_POSITIONS` | Maximum positions the bot can place in a live round      |
@@ -168,7 +168,6 @@ ENABLE_EARLY_PRECISION = false
 ```
 60     -> [0.2, 0.3, 0.4, 0.5]
 3600   -> [1, 2, 3, 4]
-23400  -> [5, 6, 7, 8]
 86400  -> [5, 6, 7, 8]
 ```
 
@@ -177,7 +176,6 @@ ENABLE_EARLY_PRECISION = false
 ```
 60     -> min: -10,  max: 10
 3600   -> min: -40,  max: 50
-23400  -> min: -40,  max: 50
 86400  -> min: -40,  max: 50
 ```
 

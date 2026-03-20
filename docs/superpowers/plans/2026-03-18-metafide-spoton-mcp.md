@@ -215,7 +215,7 @@ const METAFIDE_BASE_PATH = "surge/games/";
 
 export interface StrategyConfig {
   network: "testnet" | "mainnet";
-  interval: 60 | 3600 | 23400 | 86400;
+  interval: 60 | 3600 | 86400;
   currency: string;
   asset: string;
   max_positions: number;
@@ -240,13 +240,11 @@ const DEFAULTS: StrategyConfig = {
   price_ranges: {
     60:    { min: -10, max: 10 },
     3600:  { min: -40, max: 50 },
-    23400: { min: -40, max: 50 },
     86400: { min: -40, max: 50 },
   },
   position_amounts: {
-    60:    [0.2, 0.3, 0.4, 0.5],
+    60:    [0.01, 0.02, 0.03, 0.04],
     3600:  [1, 2, 3, 4],
-    23400: [5, 6, 7, 8],
     86400: [5, 6, 7, 8],
   },
 };
@@ -316,7 +314,6 @@ describe('validation', () => {
     it('accepts valid intervals', () => {
       expect(validateInterval(60)).toBe(true);
       expect(validateInterval(3600)).toBe(true);
-      expect(validateInterval(23400)).toBe(true);
       expect(validateInterval(86400)).toBe(true);
     });
     it('rejects invalid intervals', () => {
@@ -382,9 +379,9 @@ Expected: FAIL — module not found.
 ```typescript
 // src/utils/validation.ts
 
-const VALID_INTERVALS = [60, 3600, 23400, 86400] as const;
+const VALID_INTERVALS = [60, 3600, 86400] as const;
 const VALID_NETWORKS = ["testnet", "mainnet"] as const;
-const POSITION_MINIMUMS: Record<number, number> = { 60: 0.1, 3600: 1, 23400: 5, 86400: 5 };
+const POSITION_MINIMUMS: Record<number, number> = { 60: 0.01, 3600: 1, 86400: 5 };
 
 export function validateInterval(interval: number): boolean {
   return (VALID_INTERVALS as readonly number[]).includes(interval);
@@ -973,7 +970,7 @@ export async function handleConfigureStrategy(input: ConfigureInput): Promise<Ca
     errors.push('network must be "testnet" or "mainnet"');
   }
   if (input.interval !== undefined && !validateInterval(input.interval)) {
-    errors.push('interval must be 60, 3600, 23400, or 86400');
+    errors.push('interval must be 60, 3600 or 86400');
   }
   if (input.max_positions !== undefined && !validateMaxPositions(input.max_positions)) {
     errors.push('max_positions must be 1-10');
@@ -1190,7 +1187,7 @@ interface PlacePositionInput {
   confirmed?: boolean;
 }
 
-const POSITION_MINIMUMS: Record<number, number> = { 60: 0.1, 3600: 1, 23400: 5, 86400: 5 };
+const POSITION_MINIMUMS: Record<number, number> = { 60: 0.1, 3600: 1, 86400: 5 };
 
 export async function handlePlacePosition(
   api: MetafideApi,
@@ -1681,7 +1678,7 @@ server.tool(
   'Adjust bot strategy: network, interval, max positions, price ranges',
   {
     network: z.enum(['testnet', 'mainnet']).optional().describe('Network to operate on'),
-    interval: z.number().optional().describe('Game interval in seconds: 60, 3600, 23400, or 86400'),
+    interval: z.number().optional().describe('Game interval in seconds: 60, 3600 or 86400'),
     max_positions: z.number().optional().describe('Maximum positions per round (1-10)'),
     price_range_min: z.number().optional().describe('Minimum price offset from live price'),
     price_range_max: z.number().optional().describe('Maximum price offset from live price'),

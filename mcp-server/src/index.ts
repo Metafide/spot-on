@@ -69,7 +69,7 @@ server.tool(
   'Adjust bot strategy: network, interval, max positions, price ranges',
   {
     network: z.enum(['testnet', 'mainnet']).optional().describe('Network to operate on'),
-    interval: z.number().optional().describe('Game interval in seconds: 60, 3600, 23400, or 86400'),
+    interval: z.number().optional().describe('Game interval in seconds: 60, 3600 or 86400'),
     max_positions: z.number().optional().describe('Maximum positions per round (1-10)'),
     price_range_min: z.number().optional().describe('Minimum price offset from live price'),
     price_range_max: z.number().optional().describe('Maximum price offset from live price'),

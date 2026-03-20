@@ -18,7 +18,7 @@ export async function handleConfigureStrategy(input: ConfigureInput) {
     errors.push('network must be "testnet" or "mainnet"');
   }
   if (input.interval !== undefined && !validateInterval(input.interval)) {
-    errors.push('interval must be 60, 3600, 23400, or 86400');
+    errors.push('interval must be 60, 3600 or 86400');
   }
   if (input.max_positions !== undefined && !validateMaxPositions(input.max_positions)) {
     errors.push('max_positions must be 1-10');

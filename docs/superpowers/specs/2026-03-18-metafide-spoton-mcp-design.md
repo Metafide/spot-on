@@ -72,7 +72,7 @@ These are set once in the MCP server config (e.g., Claude Desktop `claude_deskto
 - **Behavior:**
   1. Fetch current game state via `GET /spot`
   2. Validate game is accepting positions
-  3. Validate amount meets minimum for current interval (60s: 0.1, 3600s: 1, 23400s: 5, 86400s: 5)
+  3. Validate amount meets minimum for current interval (60s: 0.1, 3600s: 1, 86400s: 5)
   4. If network is mainnet and `confirmed` is not `true`: return confirmation object with details, do not submit
   5. If testnet or confirmed: `POST /spot` with payload:
      ```
@@ -103,7 +103,7 @@ These are set once in the MCP server config (e.g., Claude Desktop `claude_deskto
 - **Purpose:** Adjust bot parameters at runtime
 - **Parameters (all optional):**
   - `network` — "testnet" or "mainnet"
-  - `interval` — 60, 3600, 23400, or 86400
+  - `interval` — 60, 3600 or 86400
   - `max_positions` — 1 to 10
   - `price_range_min` — minimum price offset (number)
   - `price_range_max` — maximum price offset (number)
@@ -130,13 +130,11 @@ enable_early_precision: false
 price_ranges: {
   60:    { min: -10,  max: 10 }
   3600:  { min: -40,  max: 50 }
-  23400: { min: -40,  max: 50 }
   86400: { min: -40,  max: 50 }
 }
 position_amounts: {
-  60:    [0.2, 0.3, 0.4, 0.5]
+  60:    [0.01, 0.02, 0.03, 0.04]
   3600:  [1, 2, 3, 4]
-  23400: [5, 6, 7, 8]
   86400: [5, 6, 7, 8]
 }
 ```

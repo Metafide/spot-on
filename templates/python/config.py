@@ -81,7 +81,6 @@ ASSET = "BTC_USDT"
 PRICE_RANGES = {
     60: {"min": -10, "max": 10},
     3600: {"min": -40, "max": 50},
-    23400: {"min": -40, "max": 50},
     86400: {"min": -40, "max": 50},
 }
 
@@ -100,6 +99,5 @@ ENABLE_EARLY_PRECISION = False
 POSITIONS_RANGE = {
     60: [0.01, 0.02, 0.03, 0.04],
     3600: [1, 2, 3, 4],
-    23400: [5, 6, 7, 8],
     86400: [5, 6, 7, 8],
 }

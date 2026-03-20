@@ -8,7 +8,7 @@ interface PlacePositionInput {
   confirmed?: boolean;
 }
 
-const POSITION_MINIMUMS: Record<number, number> = { 60: 0.1, 3600: 1, 23400: 5, 86400: 5 };
+const POSITION_MINIMUMS: Record<number, number> = { 60: 0.1, 3600: 1, 86400: 5 };
 
 export async function handlePlacePosition(
   api: MetafideApi,

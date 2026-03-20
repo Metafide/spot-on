@@ -55,14 +55,14 @@ Main behavior:
 
 Contains all configuration values such as:
 
-* API key
-* user wallet address
-* network
-* interval
-* currency
-* asset
-* allowed position ranges
-* price randomization ranges
+- API key
+- user wallet address
+- network
+- interval
+- currency
+- asset
+- allowed position ranges
+- price randomization ranges
 
 #### `index.mjs`
 
@@ -70,11 +70,11 @@ CLI entry point.
 
 Provides commands like:
 
-* `run`
-* `start`
-* `stop`
-* `status`
-* `logs`
+- `run`
+- `start`
+- `stop`
+- `status`
+- `logs`
 
 #### `runner.mjs`
 
@@ -82,9 +82,9 @@ Runtime launcher.
 
 Responsible for:
 
-* validating config
-* setting up shutdown handling
-* starting the main bot loop
+- validating config
+- setting up shutdown handling
+- starting the main bot loop
 
 #### `request.mjs`
 
@@ -96,17 +96,17 @@ Core bot logic.
 
 Responsible for:
 
-* polling game state
-* generating positions
-* submitting positions
-* retrying failures
-* printing summaries
+- polling game state
+- generating positions
+- submitting positions
+- retrying failures
+- printing summaries
 
 ---
 
 ## Requirements
 
-* Node.js 18 or higher
+- Node.js 18 or higher
 
 Node 18+ is recommended because it includes native `fetch`.
 
@@ -135,12 +135,12 @@ const METAFIDE_USER_ADDRESS = "";
 
 You should also review:
 
-* `NETWORK`
-* `INTERVAL`
-* `CURRENCY`
-* `ASSET`
-* `MAX_ALLOWED_POSITIONS`
-* `ENABLE_EARLY_PRECISION`
+- `NETWORK`
+- `INTERVAL`
+- `CURRENCY`
+- `ASSET`
+- `MAX_ALLOWED_POSITIONS`
+- `ENABLE_EARLY_PRECISION`
 
 ---
 
@@ -164,8 +164,8 @@ Your wallet address used for placing positions.
 
 Supported values:
 
-* `"testnet"`
-* `"mainnet"`
+- `"testnet"`
+- `"mainnet"`
 
 Example:
 
@@ -179,10 +179,9 @@ const NETWORK = "testnet";
 
 Supported values:
 
-* `60`
-* `3600`
-* `23400`
-* `86400`
+- `60`
+- `3600`
+- `86400`
 
 Example:
 
@@ -244,9 +243,8 @@ Example:
 
 ```javascript
 const POSITIONS_RANGE = {
-  60: [0.2, 0.3, 0.4, 0.5],
+  60: [0.01, 0.02, 0.03, 0.04],
   3600: [1, 2, 3, 4],
-  23400: [5, 6, 7, 8],
   86400: [5, 6, 7, 8],
 };
 ```
@@ -261,9 +259,8 @@ Example:
 
 ```javascript
 const PRICE_RANGES = {
-  60:    { min: -10, max: 10 },
-  3600:  { min: -40, max: 50 },
-  23400: { min: -40, max: 50 },
+  60: { min: -10, max: 10 },
+  3600: { min: -40, max: 50 },
   86400: { min: -40, max: 50 },
 };
 ```
@@ -282,9 +279,9 @@ node index.mjs run
 
 Use this when:
 
-* testing
-* debugging
-* watching logs live
+- testing
+- debugging
+- watching logs live
 
 Stop with:
 
@@ -304,9 +301,9 @@ node index.mjs start
 
 This will:
 
-* create a PID file
-* write logs to a log file
-* allow later stop/status/log commands
+- create a PID file
+- write logs to a log file
+- allow later stop/status/log commands
 
 ---
 
@@ -434,8 +431,8 @@ This avoids unnecessary duplicate attempts.
 
 When submissions fail, the bot retries failed positions only.
 
-* max retries: 3
-* delay between retries: 1 second
+- max retries: 3
+- delay between retries: 1 second
 
 ---
 
@@ -463,12 +460,12 @@ If config is missing or invalid, the bot will fail before starting.
 
 Examples:
 
-* missing API key
-* missing wallet address
-* invalid network
-* invalid interval
-* invalid position ranges
-* invalid price ranges
+- missing API key
+- missing wallet address
+- invalid network
+- invalid interval
+- invalid position ranges
+- invalid price ranges
 
 This prevents the bot from running in a broken state.
 
@@ -488,10 +485,10 @@ const NETWORK = "testnet";
 
 Only switch to mainnet after confirming:
 
-* your API key is correct
-* your wallet address is correct
-* your ranges are safe
-* your position sizing is correct
+- your API key is correct
+- your wallet address is correct
+- your ranges are safe
+- your position sizing is correct
 
 ---
 
@@ -501,10 +498,10 @@ Only switch to mainnet after confirming:
 
 Check `config.mjs` and ensure:
 
-* `METAFIDE_API_KEY` is set
-* `METAFIDE_USER_ADDRESS` is set
-* `NETWORK` is valid
-* `INTERVAL` is valid
+- `METAFIDE_API_KEY` is set
+- `METAFIDE_USER_ADDRESS` is set
+- `NETWORK` is valid
+- `INTERVAL` is valid
 
 ---
 
@@ -512,10 +509,10 @@ Check `config.mjs` and ensure:
 
 Possible reasons:
 
-* game is not accepting positions
-* early precision is enabled but the window is closed
-* max positions already reached
-* API response is incomplete
+- game is not accepting positions
+- early precision is enabled but the window is closed
+- max positions already reached
+- API response is incomplete
 
 Check logs:
 
@@ -545,8 +542,8 @@ node index.mjs stop
 
 The CLI automatically cleans stale PID files when possible during:
 
-* `start`
-* `status`
+- `start`
+- `status`
 
 ---
 
@@ -556,10 +553,10 @@ Use carefully on live environments.
 
 Before using `mainnet`, confirm:
 
-* your funding amounts are intended
-* your ranges are intended
-* your asset and interval are correct
-* you understand the game behavior
+- your funding amounts are intended
+- your ranges are intended
+- your asset and interval are correct
+- you understand the game behavior
 
 ---
 
