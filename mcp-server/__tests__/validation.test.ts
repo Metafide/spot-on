@@ -43,8 +43,8 @@ describe("validation", () => {
 
   describe("validatePositionAmount", () => {
     it("validates minimum per interval", () => {
-      expect(validatePositionAmount(0.01, 60)).toBe(true);
-      expect(validatePositionAmount(0.005, 60)).toBe(false);
+      expect(validatePositionAmount(0.1, 60)).toBe(true);
+      expect(validatePositionAmount(0.09, 60)).toBe(false);
       expect(validatePositionAmount(1, 3600)).toBe(true);
       expect(validatePositionAmount(0.5, 3600)).toBe(false);
       expect(validatePositionAmount(5, 86400)).toBe(true);
