@@ -77,7 +77,7 @@ import {
     // ---------------------------------------------------------------------------
     // INTERVAL validation
     // ---------------------------------------------------------------------------
-    const VALID_INTERVALS = [60, 3600, 86400];
+    const VALID_INTERVALS = [10, 60, 3600, 86400];
     if (!VALID_INTERVALS.includes(INTERVAL)) {
       errors.push(
         `INTERVAL must be one of: ${VALID_INTERVALS.join(", ")} — got "${INTERVAL}"`
@@ -118,7 +118,7 @@ import {
     // POSITIONS_RANGE validation
     // Each interval must have an allowed set of position sizes.
     // ---------------------------------------------------------------------------
-    const POSITION_MINIMUMS = { 60: 0.01, 3600: 1, 86400: 5 };
+    const POSITION_MINIMUMS = { 10: 0.01, 60: 0.01, 3600: 1, 86400: 5 };
   
     for (const interval of VALID_INTERVALS) {
       const range = POSITIONS_RANGE[interval];

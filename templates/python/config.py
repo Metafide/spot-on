@@ -63,6 +63,9 @@ NETWORK = "testnet"
 METAFIDE_USER_ADDRESS = "0x50294f689a5C9b8466222448453dD0BDA934d7dA"
 
 # The duration of each game round in seconds.
+#
+# Supported values per asset:
+#   BTC_USDT : 10 (10 seconds) | 60 (1 minute) | 3600 (1 hour) | 86400 (1 day)
 INTERVAL = 60
 
 # The currency used to fund positions.
@@ -79,6 +82,7 @@ ASSET = "BTC_USDT"
 
 # Randomization band for strike prices by interval.
 PRICE_RANGES = {
+    10: {"min": -10, "max": 10},
     60: {"min": -10, "max": 10},
     3600: {"min": -40, "max": 50},
     86400: {"min": -40, "max": 50},
@@ -97,6 +101,7 @@ ENABLE_EARLY_PRECISION = False
 
 # Allowed position sizes per interval.
 POSITIONS_RANGE = {
+    10: [0.01, 0.02, 0.03, 0.04],
     60: [0.01, 0.02, 0.03, 0.04],
     3600: [1, 2, 3, 4],
     86400: [5, 6, 7, 8],

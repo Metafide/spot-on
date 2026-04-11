@@ -172,8 +172,9 @@ def main() -> None:
         # ---------------------------------------------------------------------
         # Step 6: Optional early precision restriction
         # If enabled, only place positions during the early precision window.
+        # Skip this restriction for interval 10.
         # ---------------------------------------------------------------------
-        if ENABLE_EARLY_PRECISION and not games.get("early_precision_window"):
+        if ENABLE_EARLY_PRECISION and INTERVAL != 10 and not games.get("early_precision_window"):
             print("Early precision window is not open. Skipping cycle.")
             return
 
