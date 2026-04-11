@@ -101,8 +101,7 @@ const METAFIDE_USER_ADDRESS = "";
  * The duration of each game round the bot participates in, in seconds.
  *
  * Supported values per asset:
- *   BTC_USDT : 60 (1 minute) | 3600 (1 hour) | 86400 (1 day)
- *   NVIDIA   : 60 (1 minute) | 3600 (1 hour) | 86400 (1 day)
+ *   BTC_USDT : 10 (10 seconds) | 60 (1 minute) | 3600 (1 hour) | 86400 (1 day)
  *
  * @default 60
  */
@@ -148,6 +147,7 @@ const ASSET = "BTC_USDT";
  * @property {number} max - Maximum positive offset from live price
  */
 const PRICE_RANGES = {
+  10: { min: -10, max: 10 },
   60: { min: -10, max: 10 },
   3600: { min: -40, max: 50 },
   86400: { min: -40, max: 50 },
@@ -192,16 +192,29 @@ const ENABLE_EARLY_PRECISION = false;
  *   86400 →  1-day rounds     — larger positions  (5 – 8 USDC)
  */
 const POSITIONS_RANGE = {
+  10: [0.01, 0.02, 0.03, 0.04],
   60: [0.01, 0.02, 0.03, 0.04],
   3600: [1, 2, 3, 4],
   86400: [5, 6, 7, 8],
 };
+
+
+/**
+ * Duration (in milliseconds) used to pause execution, typically for retry delays,
+ * throttling operations, or spacing out async tasks.
+ *
+ * @constant
+ * @type {number}
+ * @default 5000
+ */
+const SLEEP_TIMER = 5000;
 
 // -----------------------------------------------------------------------------
 // EXPORTS
 // Note: This is an ES module (config.mjs) so we use `export` syntax.
 // -----------------------------------------------------------------------------
 export {
+  SLEEP_TIMER,
   METAFIDE_API_KEY,
   NETWORK,
   METAFIDE_USER_ADDRESS,

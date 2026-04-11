@@ -76,7 +76,7 @@ def validate_config() -> None:
     # -------------------------------------------------------------------------
     # INTERVAL validation
     # -------------------------------------------------------------------------
-    valid_intervals = [60, 3600, 86400]
+    valid_intervals = [10, 60, 3600, 86400]
     if INTERVAL not in valid_intervals:
         errors.append(
             f'INTERVAL must be one of: {", ".join(map(str, valid_intervals))} — got "{INTERVAL}"'
@@ -115,6 +115,7 @@ def validate_config() -> None:
     # Each interval must have an allowed set of position sizes.
     # -------------------------------------------------------------------------
     position_minimums = {
+        10: 0.01,
         60: 0.01,
         3600: 1,
         86400: 5,

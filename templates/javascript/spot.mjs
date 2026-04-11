@@ -32,6 +32,7 @@ import {
   ENABLE_EARLY_PRECISION,
   POSITIONS_RANGE,
   PRICE_RANGES,
+  SLEEP_TIMER,
 } from "./config.mjs";
 import { request } from "./request.mjs";
 
@@ -68,7 +69,7 @@ export async function initialize(message) {
       console.error("Error in main loop:", error);
     }
 
-    await sleep(5000);
+    await sleep(SLEEP_TIMER);
   }
 }
 
@@ -128,7 +129,9 @@ async function main() {
       // Step 3: Enforce the configured maximum position count
       // -----------------------------------------------------------------------
       if (currentPositionCount >= MAX_ALLOWED_POSITIONS) {
-        console.log("Max positions reached for the current live game. Skipping cycle.");
+        console.log(
+          "Max positions reached for the current live game. Skipping cycle."
+        );
         return;
       }
     }
@@ -153,19 +156,25 @@ async function main() {
     // Step 5: Confirm that the game currently allows placing positions
     // -------------------------------------------------------------------------
     if (!games.can_place_position) {
-      console.log("Game is not accepting positions at this time. Skipping cycle.");
+      console.log(
+        "Game is not accepting positions at this time. Skipping cycle."
+      );
       return;
     }
 
     // -------------------------------------------------------------------------
     // Step 6: Optional early precision restriction
     // If enabled, only place positions during the early precision window.
+    // Skip this restriction for interval 10.
     // -------------------------------------------------------------------------
-    if (ENABLE_EARLY_PRECISION && !games.early_precision_window) {
+    if (
+      ENABLE_EARLY_PRECISION &&
+      INTERVAL !== 10 &&
+      !games.early_precision_window
+    ) {
       console.log("Early precision window is not open. Skipping cycle.");
       return;
     }
-
     // Current price is rounded to a whole number before randomization.
     const currentPrice = Number(price.value.toFixed(0));
 
@@ -305,7 +314,9 @@ async function submitPositions(positions, retries = 0) {
   // Retry only failed positions, not successful ones.
   if (failed.length > 0 && retries < MAX_RETRIES) {
     console.log(
-      `Retrying ${failed.length} failed position(s)... (attempt ${retries + 1} of ${MAX_RETRIES})`
+      `Retrying ${failed.length} failed position(s)... (attempt ${
+        retries + 1
+      } of ${MAX_RETRIES})`
     );
     await sleep(1000);
     await submitPositions(failed, retries + 1);
