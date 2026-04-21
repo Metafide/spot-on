@@ -110,6 +110,9 @@ async function main() {
   console.log('  Add to .cursor/mcp.json or .windsurf/mcp.json:');
   console.log(JSON.stringify({ mcpServers: { [SERVER_NAME]: serverEntry } }, null, 2));
 
+  console.log('  To use testnet (staging), add METAFIDE_API_URL to your env:');
+  console.log(`  METAFIDE_API_URL=https://staging-rest-service-714806972467.us-east1.run.app\n`);
+
   console.log(`\n  Setup complete. ${configured} tool(s) configured automatically.`);
   console.log('  Restart your AI tool to start using the bot.\n');
 

@@ -13,6 +13,7 @@ import { handlePlacePosition } from './tools/place-position.js';
 import { handleRunBotCycle } from './tools/run-bot-cycle.js';
 import { handleConfigureStrategy } from './tools/configure-strategy.js';
 import { handleGetConfig } from './tools/get-config.js';
+import { handleGetResults } from './tools/get-results.js';
 
 const server = new McpServer({
   name: 'metafide-spoton',
@@ -84,6 +85,20 @@ server.tool(
 server.tool('get_config', 'View current bot strategy configuration', {}, async () => {
   return handleGetConfig();
 });
+
+server.tool(
+  'get_results',
+  'Get historical game results — winnings, returns, closing prices. Use gid for a specific game or omit for recent history.',
+  {
+    gid: z.string().optional().describe('Specific game ID to look up'),
+    interval: z.number().optional().describe('Filter by interval: 10, 60, 3600, or 86400'),
+    limit: z.number().optional().describe('Max results (1-100, default 20)'),
+    offset: z.number().optional().describe('Pagination offset'),
+  },
+  async ({ gid, interval, limit, offset }) => {
+    return handleGetResults(createApi(), getConfig(), { gid, interval, limit, offset });
+  }
+);
 
 async function main() {
   const config = getConfig();
