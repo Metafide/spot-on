@@ -4,7 +4,7 @@ const METAFIDE_BASE_PATH = "surge/games/";
 
 export interface StrategyConfig {
   network: "testnet" | "mainnet";
-  interval: 60 | 3600 | 86400;
+  interval: 10 | 60 | 3600 | 86400;
   currency: string;
   asset: string;
   max_positions: number;
@@ -27,11 +27,13 @@ const DEFAULTS: StrategyConfig = {
   max_positions: 10,
   enable_early_precision: false,
   price_ranges: {
+    10: { min: -5, max: 5 },
     60: { min: -10, max: 10 },
     3600: { min: -40, max: 50 },
     86400: { min: -40, max: 50 },
   },
   position_amounts: {
+    10: [0.01, 0.02, 0.03, 0.04],
     60: [0.01, 0.02, 0.03, 0.04],
     3600: [1, 2, 3, 4],
     86400: [5, 6, 7, 8],

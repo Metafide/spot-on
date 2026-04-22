@@ -1,6 +1,6 @@
-const VALID_INTERVALS = [60, 3600, 86400] as const;
+const VALID_INTERVALS = [10, 60, 3600, 86400] as const;
 const VALID_NETWORKS = ["testnet", "mainnet"] as const;
-const POSITION_MINIMUMS: Record<number, number> = { 60: 0.1, 3600: 1, 86400: 5 };
+const POSITION_MINIMUMS: Record<number, number> = { 10: 0.01, 60: 0.1, 3600: 1, 86400: 5 };
 
 export function validateInterval(interval: number): boolean {
   return (VALID_INTERVALS as readonly number[]).includes(interval);
