@@ -41,7 +41,7 @@ METAFIDE_ENDPOINT = f"{METAFIDE_API_URL}/{METAFIDE_API_VERSION}/{METAFIDE_BASE_P
 
 # Your personal Metafide API key.
 # Keep this value private and never commit it publicly.
-METAFIDE_API_KEY = "YOUR_API_KEY"
+METAFIDE_API_KEY = ""
 
 # -----------------------------------------------------------------------------
 # NETWORK
@@ -60,13 +60,13 @@ NETWORK = "testnet"
 
 # Your personal Metafide wallet address.
 # This is attached to every position the bot places.
-METAFIDE_USER_ADDRESS = "YOUR_METAFIDE_WALLET_ADDRESS"
+METAFIDE_USER_ADDRESS = ""
 
 # The duration of each game round in seconds.
 #
 # Supported values per asset:
 #   BTC_USDT : 10 (10 seconds) | 60 (1 minute) | 3600 (1 hour) | 86400 (1 day)
-INTERVAL = 60
+INTERVAL = 10
 
 # The currency used to fund positions.
 CURRENCY = "USDC"
@@ -106,3 +106,6 @@ POSITIONS_RANGE = {
     3600: [1, 2, 3, 4],
     86400: [5, 6, 7, 8],
 }
+
+# Duration (in milliseconds) between bot cycles.
+SLEEP_TIMER = 5000
