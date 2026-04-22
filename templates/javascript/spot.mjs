@@ -61,100 +61,114 @@ async function sleep(ms) {
  */
 export async function initialize(message) {
   console.log(`Running bot session: ${message}`);
-
   while (true) {
     try {
       await main();
     } catch (error) {
       console.error("Error in main loop:", error);
     }
-
     await sleep(SLEEP_TIMER);
   }
 }
 
 /**
- * Runs one full bot cycle.
+ * Dispatches one bot cycle based on the configured INTERVAL.
  *
- * High-level flow:
- *
- *   Step 1:
- *     Fetch current status for the configured asset/interval
- *
- *   Step 2:
- *     Check how many positions already exist in the live game
- *
- *   Step 3:
- *     If max positions are already reached, stop this cycle early
- *
- *   Step 4:
- *     Fetch balance, live game data, and price concurrently
- *
- *   Step 5:
- *     Validate whether the game is currently accepting positions
- *
- *   Step 6:
- *     Optionally enforce early precision mode
- *
- *   Step 7:
- *     Generate only the remaining number of allowed positions
- *
- *   Step 8:
- *     Submit those positions to the API
+ * Behavior:
+ *   - interval 10 -> placeOnNextGame() (schedule for the upcoming round)
+ *   - otherwise   -> placeOnLiveGame() (place on the active round)
  */
 async function main() {
-  try {
-    // -------------------------------------------------------------------------
-    // Step 1: Fetch current live status for this asset/interval/network
-    // -------------------------------------------------------------------------
-    const status = await request(
-      "GET",
-      `status?asset=${ASSET}&token=${CURRENCY}&network=${NETWORK}&interval=${INTERVAL}`
-    );
+  if (INTERVAL === 10) {
+    placeOnNextGame();
+  } else {
+    placeOnLiveGame();
+  }
+}
 
-    // If no status is returned, skip this cycle safely.
-    if (!status) return;
+/**
+ * Shared setup for both scheduling modes.
+ *
+ * Behavior:
+ *   - fetch the current round status
+ *   - log any positions already in flight
+ *   - enforce the per-round MAX_ALLOWED_POSITIONS cap
+ *
+ * Parameters:
+ *   isLiveGame -> whether to include streaks in the summary log
+ *
+ * Returns:
+ *   number of position slots still available this cycle, or 0 to skip
+ */
+async function getRemainingSlots(isLiveGame) {
+  const status = await request(
+    "GET",
+    `status?asset=${ASSET}&token=${CURRENCY}&network=${NETWORK}&interval=${INTERVAL}`
+  );
+  if (!status) return 0;
 
-    // -------------------------------------------------------------------------
-    // Step 2: Inspect current positions already placed in the live game
-    // -------------------------------------------------------------------------
-    const existingPositions = status.positions || [];
-    const currentPositionCount = existingPositions.length;
+  const currentPositionCount = (status.positions || []).length;
 
-    // If positions already exist, print a useful summary for monitoring.
-    if (currentPositionCount > 0) {
-      logPositionSummary(status);
+  if (currentPositionCount > 0) {
+    logPositionSummary(status, isLiveGame);
 
-      // -----------------------------------------------------------------------
-      // Step 3: Enforce the configured maximum position count
-      // -----------------------------------------------------------------------
-      if (currentPositionCount >= MAX_ALLOWED_POSITIONS) {
-        console.log(
-          "Max positions reached for the current live game. Skipping cycle."
-        );
-        return;
-      }
+    if (currentPositionCount >= MAX_ALLOWED_POSITIONS) {
+      console.log(
+        "Max positions reached for the current live game. Skipping cycle."
+      );
+      return 0;
     }
+  }
 
-    // -------------------------------------------------------------------------
-    // Step 4: Fetch balance, game metadata, and live price in parallel
-    // This is faster than fetching them one after another.
-    // -------------------------------------------------------------------------
+  return MAX_ALLOWED_POSITIONS - currentPositionCount;
+}
+
+/**
+ * Generates and submits positions for a given game round.
+ *
+ * Parameters:
+ *   gameId         -> target game ID (live or upcoming)
+ *   price          -> live-price API response ({ value: number })
+ *   remainingSlots -> how many positions to generate this cycle
+ */
+async function placePositions(gameId, price, remainingSlots) {
+  const currentPrice = Number(price.value.toFixed(0));
+  const positions = generatePositions(gameId, currentPrice, remainingSlots);
+
+  console.log("Generated positions:", positions.length);
+  await submitPositions(positions);
+}
+
+/**
+ * Places positions on the currently live game round.
+ *
+ * Used for intervals 60, 3600, and 86400 where the round is long enough
+ * to safely submit while it is already in progress.
+ *
+ * Behavior:
+ *   - check remaining slot capacity
+ *   - fetch balance, game metadata, and live price in parallel
+ *   - confirm the game is accepting positions
+ *   - optionally enforce the early precision window (skipped for interval 10)
+ *   - generate and submit positions against liveGame.gid
+ */
+async function placeOnLiveGame() {
+  try {
+    const remainingSlots = await getRemainingSlots(true);
+    if (remainingSlots <= 0) return;
+
+    // Fetch balance, game metadata, and live price in parallel.
     const [balance, games, price] = await Promise.all([
       request("GET", `user-balance?currency=${CURRENCY}&network=${NETWORK}`),
       request("GET", `spot?asset=${ASSET}&interval=${INTERVAL}`),
       request("GET", `live-price?asset=${ASSET}`),
     ]);
 
-    // If any key dependency is missing, skip this cycle.
     if (!balance || !games || !price) {
       console.log("Incomplete data received. Skipping cycle.");
       return;
     }
 
-    // -------------------------------------------------------------------------
-    // Step 5: Confirm that the game currently allows placing positions
-    // -------------------------------------------------------------------------
     if (!games.can_place_position) {
       console.log(
         "Game is not accepting positions at this time. Skipping cycle."
@@ -162,11 +176,7 @@ async function main() {
       return;
     }
 
-    // -------------------------------------------------------------------------
-    // Step 6: Optional early precision restriction
-    // If enabled, only place positions during the early precision window.
-    // Skip this restriction for interval 10.
-    // -------------------------------------------------------------------------
+    // Optional early precision restriction. Skipped for interval 10.
     if (
       ENABLE_EARLY_PRECISION &&
       INTERVAL !== 10 &&
@@ -175,40 +185,64 @@ async function main() {
       console.log("Early precision window is not open. Skipping cycle.");
       return;
     }
-    // Current price is rounded to a whole number before randomization.
-    const currentPrice = Number(price.value.toFixed(0));
 
-    // -------------------------------------------------------------------------
-    // Step 7: Only generate the remaining number of allowed positions
-    //
-    // Example:
-    //   MAX_ALLOWED_POSITIONS = 10
-    //   currentPositionCount  = 6
-    //   remainingSlots        = 4
-    //
-    // This is safer than always attempting 10 positions every cycle.
-    // -------------------------------------------------------------------------
-    const remainingSlots = MAX_ALLOWED_POSITIONS - currentPositionCount;
+    const liveGameId = games.liveGame.gid;
+    await placePositions(liveGameId, price, remainingSlots);
+  } catch (error) {
+    console.error("Error in placeOnLiveGame:", error);
+  }
+}
 
-    if (remainingSlots <= 0) {
-      console.log("No remaining slots available. Skipping cycle.");
+const SCHEDULED_NEXT_GAMES = new Set();
+const TIME_OUTS = [];
+
+/**
+ * Schedules positions for the upcoming game round.
+ *
+ * Used for interval 10, where rounds are too short to reliably submit
+ * against the live game. Instead we pre-schedule submission against the
+ * next round and fire it the moment the current round ends.
+ *
+ * Behavior:
+ *   - check remaining slot capacity
+ *   - fetch game metadata
+ *   - skip if this nextGame.gid has already been scheduled in a previous cycle
+ *   - register a timeout that, on liveGame.ends_at, fetches the live price
+ *     and submits positions against nextGame.gid
+ */
+async function placeOnNextGame() {
+  try {
+    const remainingSlots = await getRemainingSlots(false);
+    if (remainingSlots <= 0) return;
+
+    const games = await request(
+      "GET",
+      `spot?asset=${ASSET}&interval=${INTERVAL}`
+    );
+    if (!games || !games.nextGame) {
+      console.log("Incomplete data received. Skipping cycle.");
       return;
     }
 
-    const positions = generatePositions(
-      games.liveGame.gid,
-      currentPrice,
-      remainingSlots
+    const nextGameId = games.nextGame.gid;
+
+    // Skip if this nextGame has already been scheduled in a previous cycle.
+    if (SCHEDULED_NEXT_GAMES.has(nextGameId)) return;
+    SCHEDULED_NEXT_GAMES.add(nextGameId);
+
+    const remaining = games.liveGame.ends_at - Date.now();
+    console.log(
+      `Scheduling next game: ${nextGameId}, remaining time: ${remaining}`
     );
 
-    console.log("Generated positions:", positions.length);
-
-    // -------------------------------------------------------------------------
-    // Step 8: Submit generated positions
-    // -------------------------------------------------------------------------
-    await submitPositions(positions);
+    const newGameTimeout = setTimeout(async () => {
+      const price = await request("GET", `live-price?asset=${ASSET}`);
+      if (!price) return;
+      await placePositions(nextGameId, price, remainingSlots);
+    }, remaining);
+    TIME_OUTS.push(newGameTimeout);
   } catch (error) {
-    console.error("Error in main:", error);
+    console.error("Error in placeOnNextGame:", error);
   }
 }
 
@@ -335,6 +369,10 @@ async function submitPositions(positions, retries = 0) {
  *
  * This is useful for monitoring how the live game is progressing.
  *
+ * Parameters:
+ *   status     -> status API response
+ *   showStreak -> when true, also prints the streak table
+ *
  * Positions table fields:
  *   - amount
  *   - win
@@ -344,18 +382,19 @@ async function submitPositions(positions, retries = 0) {
  *   - positionId
  *   - streak
  */
-function logPositionSummary(status) {
+function logPositionSummary(status, showStreak) {
   const formattedPositions = (status.positions || []).map((p) => ({
     amount: p.f,
     win: p.w,
     return: p.r,
   }));
-
-  const formattedStreaks = (status.streaks || []).map((s) => ({
-    positionId: s.positionId,
-    streak: s.streak,
-  }));
-
   console.table(formattedPositions);
-  console.table(formattedStreaks);
+
+  if (showStreak) {
+    const formattedStreaks = (status.streaks || []).map((s) => ({
+      positionId: s.positionId,
+      streak: s.streak,
+    }));
+    console.table(formattedStreaks);
+  }
 }
