@@ -116,7 +116,7 @@ Add to `.cursor/mcp.json` or `.windsurf/mcp.json` in your project:
 
 ---
 
-## Available Tools (8)
+## Available Tools (9)
 
 | Tool | What it does |
 |------|-------------|
@@ -128,6 +128,7 @@ Add to `.cursor/mcp.json` or `.windsurf/mcp.json` in your project:
 | `run_bot_cycle` | Run one full cycle: check game, generate random positions, submit |
 | `configure_strategy` | Adjust settings: network, interval, max positions, price ranges |
 | `get_config` | View current bot configuration |
+| `get_results` | Get historical game results: winnings, returns, closing prices |
 
 ---
 

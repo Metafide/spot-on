@@ -1,5 +1,4 @@
-const METAFIDE_API_URL =
-  "https://staging-rest-service-714806972467.us-east1.run.app";
+const METAFIDE_API_URL = process.env.METAFIDE_API_URL || "https://api.metafide.io";
 const METAFIDE_API_VERSION = "v1";
 const METAFIDE_BASE_PATH = "surge/games/";
 
