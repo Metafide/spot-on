@@ -122,7 +122,6 @@ const CURRENCY = "USDC";
  *
  * Supported assets:
  *   "BTC_USDT" — Bitcoin price denominated in USDT
- *   "NVIDIA"   — NVIDIA stock price feed
  *
  * Note: Price values must be whole numbers (no decimals).
  *
