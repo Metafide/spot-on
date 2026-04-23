@@ -123,7 +123,10 @@ def get_remaining_slots(is_live_game: bool) -> int:
             print("Max positions reached for the current live game. Skipping cycle.")
             return 0
 
-    return MAX_ALLOWED_POSITIONS - current_position_count
+    if is_live_game:
+        return MAX_ALLOWED_POSITIONS - current_position_count
+    else:
+        return MAX_ALLOWED_POSITIONS
 
 
 def place_positions(

@@ -120,7 +120,11 @@ async function getRemainingSlots(isLiveGame) {
     }
   }
 
-  return MAX_ALLOWED_POSITIONS - currentPositionCount;
+  if (isLiveGame) {
+    return MAX_ALLOWED_POSITIONS - currentPositionCount;
+  } else {
+    return MAX_ALLOWED_POSITIONS;
+  }
 }
 
 /**
